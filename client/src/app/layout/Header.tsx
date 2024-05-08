@@ -1,33 +1,36 @@
 import { AppBar, Badge, Box, IconButton, List, ListItem, Switch, Toolbar, Typography } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { ShoppingCart } from "@mui/icons-material";
+import { useStoreContext } from "../context/StoreContext";
 interface Props {
     darkMode: boolean;
     handleThemeChange: () => void;
 }
 
-export default function Header({ darkMode, handleThemeChange }: Props) {
-    const midLinks = [
-        { title: 'catalog', path: '/catalog' },
-        { title: 'about', path: '/about' },
-        { title: 'contact', path: '/contact' }
-    ]
+const midLinks = [
+    { title: 'catalog', path: '/catalog' },
+    { title: 'about', path: '/about' },
+    { title: 'contact', path: '/contact' }
+]
 
-    const rightLinks = [
-        { title: 'login', path: '/login' },
-        { title: 'register', path: '/register' }
-    ]
-    const navStyles = {
-        color: 'inherit',
-        textDecoration: 'none',
-        typography: 'h6',
-        '&:hover': {
-            color: 'grey.500'
-        },
-        '&.active': {
-            color: 'text.secondary'
-        }
+const rightLinks = [
+    { title: 'login', path: '/login' },
+    { title: 'register', path: '/register' }
+]
+const navStyles = {
+    color: 'inherit',
+    textDecoration: 'none',
+    typography: 'h6',
+    '&:hover': {
+        color: 'grey.500'
+    },
+    '&.active': {
+        color: 'text.secondary'
     }
+}
+export default function Header({ darkMode, handleThemeChange }: Props) {
+    const { basket } = useStoreContext();
+    const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0)
 
     return (
 
@@ -53,8 +56,8 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
                     ))}
                 </List>
                 <Box display='flex' alignItems='center'>
-                    <IconButton size='large' sx={{ color: 'inherit' }}>
-                        <Badge badgeContent={4} color='secondary'>
+                    <IconButton component={Link} to='/basket' size='large' edge='start' color='inherit' sx={{ mr: 2 }}>
+                        <Badge badgeContent={itemCount} color='secondary'>
                             <ShoppingCart />
                         </Badge>
                     </IconButton>
